@@ -1,0 +1,243 @@
+<html>
+    <head>
+        <title>Olive's NinjaMan</title>
+        <style type="text/css">
+        * {
+            margin: 0;
+            padding: 0;
+        }
+        .wall {
+            background-color: skyblue;
+            height: 40px;
+            width: 40px;
+            display: inline-block;
+        }
+        .row {
+            line-height: 0;
+        }
+        .blank {
+            background-color: black;
+            height: 40px;
+            width: 40px;
+            display: inline-block;
+        }
+        .sushi {
+            background-color: black;
+            height: 40px;
+            width: 40px;
+            display: inline-block;
+            background-image: url('sushi.png');
+            background-size: contain;
+        }
+        .onigiri {
+            background-color: black;
+            height: 40px;
+            width: 40px;
+            display: inline-block;
+            background-image: url('onigiri.png');
+            background-size: contain;
+        }
+        #ninjaman {
+            background-color: black;
+            height: 40px;
+            width: 40px;
+            display: inline-block;
+            background-image: url('ninja.gif');
+            background-size: contain;
+            position: absolute;
+        }
+        #scaredy {
+            background-color: black;
+            height: 40px;
+            width: 40px;
+            display: inline-block;
+            background-image: url('scaredy.png');
+            background-size: contain;
+            position: absolute;
+        }
+        #pumpky {
+            background-color: black;
+            height: 40px;
+            width: 40px;
+            display: inline-block;
+            background-image: url('pumpky.gif');
+            background-size: contain;
+            position: absolute;
+        }
+        </style>
+    </head>
+    <body>
+        <div id ='world'></div>
+        <div id='ninjaman'></div>
+        <div id='scaredy'></div>
+        <div id='pumpky'></div>
+        <h1 id="score"></h1>
+    </body>
+    <script type="text/javascript">
+    function random(max,min){
+        return Math.floor(Math.random() * (max-min + 1))+min;
+    }
+    
+     var world = [
+      [1,1,1,1,1,1,1,1,1,1],
+      [1,0,random(-1,4),random(-1,4),random(-1,4),random(-1,4),random(-1,4),random(-1,4),random(-1,4),1],
+      [1,random(-1,4),random(-1,4),random(-1,4),random(-1,4),random(-1,4),random(-1,4),random(-1,4),random(-1,4),1],
+      [1,random(-1,4),random(-1,4),random(-1,4),random(-1,4),random(-1,4),random(-1,4),random(-1,4),random(-1,4),1],
+      [1,random(-1,4),random(-1,4),random(-1,4),random(-1,4),random(-1,4),random(-1,4),random(-1,4),random(-1,4),1],
+      [1,random(-1,4),random(-1,4),random(-1,4),random(-1,4),random(-1,4),random(-1,4),random(-1,4),random(-1,4),1],
+      [1,random(-1,4),random(-1,4),random(-1,4),random(-1,4),random(-1,4),random(-1,4),random(-1,4),0,1],
+      [1,random(-1,4),random(-1,4),random(-1,4),random(-1,4),random(-1,4),random(-1,4),random(-1,4),random(-1,4),1],
+      [1,random(-1,4),random(-1,4),random(-1,4),random(-1,4),random(-1,4),random(-1,4),random(-1,4),random(-1,4),1],
+      [1,1,1,1,1,1,1,1,1,1],
+    ]
+       var worldDict = {
+           0: 'blank',
+           1: 'wall',
+           2: 'sushi',
+           3: 'onigiri',
+       }
+
+       function drawWorld(){
+           output = "";
+
+           for(var row = 0;row < world.length;row++){
+               output += "<div class = 'row'>"
+               for(var x = 0;x < world[row].length;x++){
+                   output += "<div class = '" + worldDict[world[row][x]] +"'></div>"
+               }
+               output += "</div>"
+           }
+
+           document.getElementById('world').innerHTML =
+           output;
+       }
+       drawWorld();
+
+       var ninjaman = {
+           x: 1,
+           y: 1,
+       }
+       var score = 0;
+       const element = document.getElementById("score");
+        element.innerHTML = "Score: " + score;
+        var lives = 3;
+        console.log("Lives: " + lives);
+        var scaredy = {
+            x: 8,
+            y: 1,
+        }
+        var pumpky = {
+            x: 1,
+            y: 8,
+        }
+
+       function drawScore(){
+        const element = document.getElementById("score");
+        element.innerHTML = "Score: " + score;
+       }
+
+       function drawNinjaman(){
+           document.getElementById('ninjaman').style.top = ninjaman.y * 40 + 'px';
+           document.getElementById('ninjaman').style.left = ninjaman.x * 40 + 'px';
+       }
+       drawNinjaman();
+
+       function drawScaredy(){
+           document.getElementById('scaredy').style.top = scaredy.y * 40 + 'px';
+           document.getElementById('scaredy').style.left = scaredy.x * 40 + 'px';
+       }
+       drawScaredy();
+
+       function drawPumpky(){
+           document.getElementById('pumpky').style.top = pumpky.y * 40 + 'px';
+           document.getElementById('pumpky').style.left = pumpky.x * 40 + 'px';
+       }
+       drawPumpky();
+
+       function moveScaredy(){
+           var move = random(-1,4);
+           if(move == 0 && (world[scaredy.y][scaredy.x - 1]) != 1){
+               scaredy.x--;
+           }
+           else if(move == 1 && (world[scaredy.y][scaredy.x + 1]) != 1){
+               scaredy.x++;
+           }
+           else if(move == 2 && (world[scaredy.y - 1][scaredy.x]) != 1){
+               scaredy.y--;
+           }
+           else if(move == 3 && (world[scaredy.y + 1][scaredy.x]) != 1){
+               scaredy.y++;
+           }
+       }
+
+       function movePumpky(){
+           var move = random(-1,4);
+           if(move == 0 && (world[pumpky.y][pumpky.x - 1]) != 1){
+               pumpky.x--;
+           }
+           else if(move == 1 && (world[pumpky.y][pumpky.x + 1]) != 1){
+               pumpky.x++;
+           }
+           else if(move == 2 && (world[pumpky.y - 1][pumpky.x]) != 1){
+               pumpky.y--;
+           }
+           else if(move == 3 && (world[pumpky.y + 1][pumpky.x]) != 1){
+               pumpky.y++;
+           }
+       }
+
+       document.onkeydown = function(e){
+           if(e.keyCode == 37){
+               if(world[ninjaman.y][ninjaman.x - 1] != 1){
+                ninjaman.x--;
+               }
+           }
+           else if(e.keyCode == 39){
+               if(world[ninjaman.y][ninjaman.x + 1] != 1){
+                ninjaman.x++;
+               }
+           }
+           else if(e.keyCode == 40){
+               if(world[ninjaman.y + 1][ninjaman.x] != 1){
+                ninjaman.y++;
+               }
+           }
+           else if(e.keyCode == 38){
+               if(world[ninjaman.y - 1][ninjaman.x] != 1){
+                ninjaman.y--;
+               }
+            }
+            if(world[ninjaman.y][ninjaman.x] === 2){
+        world[ninjaman.y][ninjaman.x] =0;
+        score+=10;
+            }
+            else if(world[ninjaman.y][ninjaman.x] === 3){
+        world[ninjaman.y][ninjaman.x] =0;
+        score+=5;
+            }
+            if((ninjaman.x === scaredy.x) && (ninjaman.y === scaredy.y)){
+                lives -= 1;
+                console.log("Lives: " + lives);
+            }
+            if((ninjaman.x === pumpky.x) && (ninjaman.y === pumpky.y)){
+                lives -= 1;
+                console.log("Lives: " + lives);
+            }
+
+            if(lives == 0){
+                document.write("Game Over!</br>Confused? You actually only have three lives! If you lose them all, you fail! Sadly, there's no real winning situation, as this game isn't optimized all the way. If you want to replay or end up getting a world where you're trapped, refresh the page!</br>Your Score: " + score);
+            }
+            drawNinjaman();
+            drawWorld();
+
+           world[ninjaman.y][ninjaman.x] = 0;
+           drawNinjaman();
+           moveScaredy();
+           drawScaredy();
+           drawWorld();
+           drawScore();
+           movePumpky();
+           drawPumpky();
+        }
+        </script>
+</html>
